@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pry'
 
 describe "Transcoder" do
   before(:all) do
@@ -11,7 +12,7 @@ describe "Transcoder" do
           m.field "mime_type", :string
       end
 
-      delegate :mime_type, :to => :characterization, :unique => true
+      has_attributes :mime_type, :datastream => :characterization, :multiple => false
       has_file_datastream 'content', type: ContentDatastream
 
       makes_derivatives do |obj|
@@ -181,6 +182,7 @@ describe "Transcoder" do
     let(:file) { GenericFile.new(mime_type: 'application/vnd.ms-excel').tap { |t| t.content.content = attachment; t.save } }
 
     it "should transcode" do
+      binding.pry
       file.create_derivatives
       puts file.datastreams.inspect
       file.datastreams['content_access'].should have_content
